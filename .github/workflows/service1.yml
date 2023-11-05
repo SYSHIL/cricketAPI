@@ -50,10 +50,10 @@ jobs:
       - name: Checkout Code for gateway
         uses: actions/checkout@v2
         with:
-          repository: 'github.com/username/gateway'
+          repository: 'github.com/sysil/gateway'
           ref: main
           path: gateway
-          
+
       - name: Get commit-hash for gateway
         id: get_gateway_commit_hash
         run: echo "commit-hash-gateway=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
