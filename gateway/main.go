@@ -9,7 +9,7 @@ import (
 )
 
 func reverseProxyHandler(targetURL string) http.Handler {
-
+	// Create a new reverse proxy for the target URL
 	target, _ := url.Parse(targetURL)
 	return httputil.NewSingleHostReverseProxy(target)
 }
