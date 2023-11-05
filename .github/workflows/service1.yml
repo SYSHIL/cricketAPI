@@ -71,3 +71,6 @@ jobs:
           else
             echo "Commit hash does not match, simulating skipping gateway build."
           fi
+        shell: bash
+        env:
+          commit-hash: ${{ steps.get_gateway_commit_hash.outputs.commit-hash }}
