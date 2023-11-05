@@ -25,6 +25,14 @@ jobs:
       - name: Simulating building service1 Docker image
         run: echo "Simulating building and pushing service1 Docker image."
 
+        # Check if commit hash of triggering commit matches commit hash of folder
+        - name: Check if commit hash matches
+          run: |
+            if [ "$(git rev-parse HEAD)" != "$(git rev-parse HEAD:service1)" ]; then
+              echo "Commit hash of triggering commit does not match commit hash of service1 folder."
+              exit 1
+            fi
+
   build_service2:
     name: Simulate Build & push Docker image for service2
     runs-on: ubuntu-latest
@@ -32,6 +40,14 @@ jobs:
     steps:
       - name: Simulating building service2 Docker image
         run: echo "Simulating building and pushing service2 Docker image."
+
+        # Check if commit hash of triggering commit matches commit hash of folder
+        - name: Check if commit hash matches
+          run: |
+            if [ "$(git rev-parse HEAD)" != "$(git rev-parse HEAD:service2)" ]; then
+              echo "Commit hash of triggering commit does not match commit hash of service2 folder."
+              exit 1
+            fi
 
   build_teams:
     name: Simulate Build & push Docker image for teams
@@ -41,23 +57,27 @@ jobs:
       - name: Simulating building teams Docker image
         run: echo "Simulating building and pushing teams Docker image."
 
+        # Check if commit hash of triggering commit matches commit hash of folder
+        - name: Check if commit hash matches
+          run: |
+            if [ "$(git rev-parse HEAD)" != "$(git rev-parse HEAD:teams)" ]; then
+              echo "Commit hash of triggering commit does not match commit hash of teams folder."
+              exit 1
+            fi
+
   build_gateway:
 
     name: Simulate Build & push Docker image for gateway
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code for gateway
-        uses: actions/checkout@v2
-        with:
-          repository: 'SYSHIL/cricketAPI'
-          ref: main
-          path: gateway
-
-      - name: Get commit-hash for gateway
-        id: get_gateway_commit_hash
-        run: echo "commit-hash-gateway=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-
-      - name: Check if commit hash matches
-        if: github.sha == steps.get_gateway_commit_hash.outputs.commit-hash-gateway
+      - name: Simulating building gateway Docker image
         run: echo "Simulating building and pushing gateway Docker image."
+
+        # Check if commit hash of triggering commit matches commit hash of folder
+        - name: Check if commit hash matches
+          run: |
+            if [ "$(git rev-parse HEAD)" != "$(git rev-parse HEAD:gateway)" ]; then
+              echo "Commit hash of triggering commit does not match commit hash of gateway folder."
+              exit 1
+            fi
