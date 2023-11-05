@@ -18,5 +18,5 @@ func main() {
 	routers.Route_func(subrouter) // Make sure this correctly sets up routes within "/service1"
 
 	// Listen on port 8083 for all requests
-	http.ListenAndServe("0.0.0.0:8083", router)
+	http.ListenAndServe(":"+BACKENDSERVICE3PORT, router)
 }

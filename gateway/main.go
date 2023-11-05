@@ -17,9 +17,20 @@ func main() {
 	router := mux.NewRouter()
 
 	// Update the target URLs to connect to the services by their container names
-	backendService1URL := "http://service1:8081" // Use the container name "service1"
-	backendService2URL := "http://service2:8082" // Use the container name "service2"
-	backendService3URL := "http://teams:8083"    // Use the container name "teams"
+	BACKENDSERVICE1URL := os.getenv("BACKENDSERVICE1URL")
+	BACKENDSERVICE1PORT := os.getenv("BACKENDSERVICE1PORT")
+
+	BACKENDSERVICE2URL := os.getenv("BACKENDSERVICE2URL")
+	BACKENDSERVICE2PORT := os.getenv("BACKENDSERVICE2PORT")
+
+	BACKENDSERVICE3URL := os.getenv("BACKENDSERVICE3URL")
+	BACKENDSERVICE3PORT := os.getenv("BACKENDSERVICE3PORT")
+
+	GATEWAYPORT := os.getenv("GATEWAYPORT")
+
+	backendService1URL := "http://" + BACKENDSERVICE1URL + ":" + BACKENDSERVICE1PORT // Use the container name "service1"
+	backendService2URL := "http://" + BACKENDSERVICE2URL + ":" + BACKENDSERVICE2PORT // Use the container name "service2"
+	backendService3URL := "http://" + BACKENDSERVICE3URL + ":" + BACKENDSERVICE3PORT // Use the container name "teams"
 	// Create routes for the API gateway
 	router.PathPrefix("/service1").Handler(reverseProxyHandler(backendService1URL))
 	router.PathPrefix("/service2").Handler(reverseProxyHandler(backendService2URL))
@@ -27,5 +38,5 @@ func main() {
 	http.Handle("/", router)
 
 	// Listen on port 8080 for external requests
-	http.ListenAndServe(":8080", router)
+	http.ListenAndServe(":"+GATEWAYPORT, router)
 }

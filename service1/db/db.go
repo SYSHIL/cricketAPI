@@ -19,7 +19,8 @@ func GetGlobalMongoClient() *mongo.Client {
 	// Use a sync.Once to ensure that initialization only happens once
 	mongoClientOnce.Do(func() {
 		serverAPI := options.ServerAPI(options.ServerAPIVersion1)
-		opts := options.Client().ApplyURI("mongodb+srv://ilhansyed:devrevler@cluster0.daiu1xh.mongodb.net/?retryWrites=true&w=majority").SetServerAPIOptions(serverAPI)
+		MONGO_URI := os.getenv("MONGO_URI")
+		opts := options.Client().ApplyURI(MONGO_URI).SetServerAPIOptions(serverAPI)
 
 		// Create a new client and connect to the server
 		client, err := mongo.Connect(context.TODO(), opts)
