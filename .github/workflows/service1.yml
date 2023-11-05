@@ -66,11 +66,11 @@ jobs:
 
       - name: Check if commit hash matches
         run: |
-        if [[ "${{ steps.get_gateway_commit_hash.outputs.commit-hash }}" == "${{ github.sha }}" ]]; then
-          echo "Commit hash matches the trigger commit: ${{ github.sha }}"
-          echo "Simulating building and pushing gateway Docker image."
-        else
-          echo "Commit hash does not match the trigger commit: ${{ github.sha }}"
-          echo "Simulating skipping gateway build."
-        fi
-        shell: bash
+          if [[ "${{ steps.get_gateway_commit_hash.outputs.commit-hash }}" == "${{ github.sha }}" ]]; then
+            echo "Commit hash matches the trigger commit: ${{ github.sha }}"
+            echo "Simulating building and pushing gateway Docker image."
+          else
+            echo "Commit hash does not match the trigger commit: ${{ github.sha }}"
+            echo "Simulating skipping gateway build."
+          fi
+          shell: bash
