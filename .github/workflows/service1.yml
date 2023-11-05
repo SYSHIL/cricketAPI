@@ -4,8 +4,7 @@ on:
   push:
     branches: 
       - main
-    paths:
-      - service1/**
+      
 permissions:
   contents: write
 
