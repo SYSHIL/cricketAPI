@@ -54,11 +54,20 @@ jobs:
       - name: Simulating building teams Docker image
         run: echo "Simulating building and pushing teams Docker image."
 
-  build_gateway:
+    build_gateway:
     name: Simulate Build & push Docker image for gateway
     needs: build_teams
     runs-on: ubuntu-latest
 
     steps:
-      - name: Simulating building gateway Docker image
-        run: echo "Simulating building and pushing gateway Docker image."
+      - name: Get commit-hash for gateway
+        id: get_gateway_commit_hash
+        run: echo "commit-hash=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: Check if commit hash matches
+        run: |
+          if [[ "${{ steps.get_gateway_commit_hash.outputs.commit-hash }}" == "$(git rev-parse --short HEAD)" ]]; then
+            echo "Simulating building and pushing gateway Docker image."
+          else
+            echo "Commit hash does not match, simulating skipping gateway build."
+          fi
