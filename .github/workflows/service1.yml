@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   build_all:
-    name: Build & push Docker images
+    name: Simulate Build & push Docker images
     runs-on: ubuntu-latest
 
     steps:
@@ -28,51 +28,31 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
   build_service1:
-    name: Build & push Docker image for service1
+    name: Simulate Build & push Docker image for service1
     needs: build_all
     runs-on: ubuntu-latest
 
     steps:
-      - name: Build and push service1 Docker image
-        uses: docker/build-push-action@v2
-        with:
-          context: ./service1
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/cricket/service1:${{ steps.get_service1_commit_hash.outputs.commit-hash }}
+      - name: Simulating building service1 Docker image
+        run: echo "Simulating building and pushing service1 Docker image."
 
   build_service2:
-    name: Build & push Docker image for service2
+    name: Simulate Build & push Docker image for service2
     needs: build_service1
     runs-on: ubuntu-latest
 
     steps:
-      - name: Get commit-hash for service2
-        id: get_service2_commit_hash
-        run: echo "commit-hash=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-
-      - name: Build and push service2 Docker image
-        uses: docker/build-push-action@v2
-        with:
-          context: ./service2
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/cricket/service2:${{ steps.get_service2_commit_hash.outputs.commit-hash }}
+      - name: Simulating building service2 Docker image
+        run: echo "Simulating building and pushing service2 Docker image."
 
   build_teams:
-    name: Build & push Docker image for teams
+    name: Simulate Build & push Docker image for teams
     needs: build_service2
     runs-on: ubuntu-latest
 
     steps:
-      - name: Get commit-hash for teams
-        id: get_teams_commit_hash
-        run: echo "commit-hash=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-
-      - name: Build and push teams Docker image
-        uses: docker/build-push-action@v2
-        with:
-          context: ./teams
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/cricket/teams:${{ steps.get_teams_commit_hash.outputs.commit-hash }}
+      - name: Simulating building teams Docker image
+        run: echo "Simulating building and pushing teams Docker image."
 
   build_gateway:
     name: Simulate Build & push Docker image for gateway
@@ -80,14 +60,5 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Get commit-hash for gateway
-        id: get_gateway_commit_hash
-        run: echo "commit-hash=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-
-      - name: Check if commit hash matches
-        run: |
-          if [[ "${{ steps.get_gateway_commit_hash.outputs.commit-hash }}" == "$(git rev-parse --short HEAD)" ]]; then
-            echo "Simulating building and pushing gateway Docker image."
-          else
-            echo "Commit hash does not match, simulating skipping gateway build."
-          fi
+      - name: Simulating building gateway Docker image
+        run: echo "Simulating building and pushing gateway Docker image."
