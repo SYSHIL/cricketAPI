@@ -6,7 +6,7 @@ on:
       - main
 
 permissions:
-  contents: write
+  contents: read, write
 
 jobs:
   build_all:
@@ -17,19 +17,8 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
 
-      - name: Get commit-hash for service1
-        id: get_service1_commit_hash
-        run: echo "commit-hash=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
   build_service1:
     name: Simulate Build & push Docker image for service1
-    needs: build_all
     runs-on: ubuntu-latest
 
     steps:
@@ -38,7 +27,6 @@ jobs:
 
   build_service2:
     name: Simulate Build & push Docker image for service2
-    needs: build_service1
     runs-on: ubuntu-latest
 
     steps:
@@ -47,7 +35,6 @@ jobs:
 
   build_teams:
     name: Simulate Build & push Docker image for teams
-    needs: build_service2
     runs-on: ubuntu-latest
 
     steps:
@@ -55,16 +42,20 @@ jobs:
         run: echo "Simulating building and pushing teams Docker image."
 
   build_gateway:
+
     name: Simulate Build & push Docker image for gateway
-    needs: build_teams
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout Code for gateway
+        uses: actions/checkout@v2
+        with:
+          path: gateway # Specify the path to the gateway folder
+
       - name: Get commit-hash for gateway
         id: get_gateway_commit_hash
-        run: echo "commit-hash=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+        run: echo "commit-hash-gateway=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
       - name: Check if commit hash matches
-        if: steps.get_service1_commit_hash.outputs.commit-hash == steps.get_gateway_commit_hash.outputs.commit-hash
+        if: github.sha == steps.get_gateway_commit_hash.outputs.commit-hash-gateway
         run: echo "Simulating building and pushing gateway Docker image."
-        
