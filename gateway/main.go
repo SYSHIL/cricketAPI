@@ -31,6 +31,7 @@ func main() {
 	backendService1URL := "http://" + BACKENDSERVICE1URL + ":" + BACKENDSERVICE1PORT // Use the container name "service1"
 	backendService2URL := "http://" + BACKENDSERVICE2URL + ":" + BACKENDSERVICE2PORT // Use the container name "service2"
 	backendService3URL := "http://" + BACKENDSERVICE3URL + ":" + BACKENDSERVICE3PORT // Use the container name "teams"
+
 	// Create routes for the API gateway
 	router.PathPrefix("/service1").Handler(reverseProxyHandler(backendService1URL))
 	router.PathPrefix("/service2").Handler(reverseProxyHandler(backendService2URL))
