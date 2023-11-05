@@ -1,49 +1,110 @@
-name: service1-ci
+name: service-ci
 
 on:
   push:
-    branches: 
+    branches:
       - main
-      
+
 permissions:
   contents: write
 
 jobs:
-
-  build:
-    name: Build & push docker image
+  build_service1:
+    name: Build & push Docker image for service1
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v2
+      - name: Checkout Code
+        uses: actions/checkout@v2
 
-    - name: getting commit-hash
-      id: get_commit_hash
-      run: echo "commit-hash=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-      
-    - name: Login to Docker Hub
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-        
-    - name: Build User Image
-      uses: docker/build-push-action@v2
-      with:
-        context: ./service1
-        push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/cricket:${{steps.get_commit_hash.outputs.commit-hash}}
+      - name: Get commit-hash for service1
+        id: get_service1_commit_hash
+        run: echo "commit-hash=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
-      #   run: pwd && sudo add-apt-repository ppa:rmescandon/yq && sudo apt-get install -y yq && yq e -i ".spec[0].template.spec.containers[0].image = \"${{ secrets.DOCKER_USERNAME }}/capstone_user:${{steps.get_commit_hash.outputs.commit-hash}}\"" ./deployment/kube/users.yaml
-      # - name: configure git
-      #   run: |
-      #     git config --global user.name ${{ secrets.USERNAME }}
-      #     git config --global user.email ${{ secrets.EMAIL }}
-      #     git config pull.rebase true
-      #     git checkout main
-      #     git add .
-      #     git commit -m "Automated depl"
-      #     git pull origin main
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-     
+      - name: Build and push service1 Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./service1
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/cricket/service1:${{ steps.get_service1_commit_hash.outputs.commit-hash }}
+
+  build_service2:
+    name: Build & push Docker image for service2
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Get commit-hash for service2
+        id: get_service2_commit_hash
+        run: echo "commit-hash=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push service2 Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./service2
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/cricket/service2:${{ steps.get_service2_commit_hash.outputs.commit-hash }}
+
+  build_teams:
+    name: Build & push Docker image for teams
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Get commit-hash for teams
+        id: get_teams_commit_hash
+        run: echo "commit-hash=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push teams Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./teams
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/cricket/teams:${{ steps.get_teams_commit_hash.outputs.commit-hash }}
+
+  build_gateway:
+    name: Build & push Docker image for gateway
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Get commit-hash for gateway
+        id: get_gateway_commit_hash
+        run: echo "commit-hash=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push gateway Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./gateway
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/cricket/gateway:${{ steps.get_gateway_commit_hash.outputs.commit-hash }}
