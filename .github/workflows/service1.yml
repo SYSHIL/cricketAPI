@@ -62,17 +62,15 @@ jobs:
     steps:
       - name: Get commit-hash for gateway
         id: get_gateway_commit_hash
-        run: echo "commit-hash=$(git -C gateway rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+        run: echo "commit-hash=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
       - name: Check if commit hash matches
         run: |
-          if [[ "${{ steps.get_gateway_commit_hash.outputs.commit-hash }}" == "${{ github.sha }}" ]]; then
-            echo "Commit hash matches the trigger commit: ${{ github.sha }}"
-            echo "Simulating building and pushing gateway Docker image."
-          else
-            echo "Commit hash does not match the trigger commit: ${{ github.sha }}"
-            echo "Simulating skipping gateway build."
-          fi
+        if [[ "${{ steps.get_gateway_commit_hash.outputs.commit-hash }}" == "${{ github.sha }}" ]]; then
+          echo "Commit hash matches the trigger commit: ${{ github.sha }}"
+          echo "Simulating building and pushing gateway Docker image."
+        else
+          echo "Commit hash does not match the trigger commit: ${{ github.sha }}"
+          echo "Simulating skipping gateway build."
+        fi
         shell: bash
-        env:
-          commit-hash: ${{ steps.get_gateway_commit_hash.outputs.commit-hash }}
