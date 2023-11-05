@@ -19,7 +19,7 @@ func GetGlobalMongoClient() *mongo.Client {
 	// Use a sync.Once to ensure that initialization only happens once
 	mongoClientOnce.Do(func() {
 		serverAPI := options.ServerAPI(options.ServerAPIVersion1)
-		opts := options.Client().ApplyURI("mongodb+srv://shivaniniranjan30:Shivani30!@cluster0.0q2rc6i.mongodb.net/?retryWrites=true&w=majority").SetServerAPIOptions(serverAPI)
+		opts := options.Client().ApplyURI("mongodb+srv://ilhansyed:devrevler@cluster0.daiu1xh.mongodb.net/?retryWrites=true&w=majority").SetServerAPIOptions(serverAPI)
 
 		// Create a new client and connect to the server
 		client, err := mongo.Connect(context.TODO(), opts)
@@ -28,7 +28,7 @@ func GetGlobalMongoClient() *mongo.Client {
 		}
 
 		// Send a ping to confirm a successful connection
-		if err := client.Database("Cricket").RunCommand(context.TODO(), bson.D{{Key: "ping", Value: 1}}).Err(); err != nil {
+		if err := client.Database("cricket").RunCommand(context.TODO(), bson.D{{Key: "ping", Value: 1}}).Err(); err != nil {
 			panic(err)
 		}
 

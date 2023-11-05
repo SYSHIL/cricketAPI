@@ -10,6 +10,11 @@ services:
       context: ./service2
     ports:
       - "8082:8082"
+  teams:
+    build:
+      context: ./teams
+    ports:
+      - "8083:8083"
   gateway:
     build:
       context: ./gateway

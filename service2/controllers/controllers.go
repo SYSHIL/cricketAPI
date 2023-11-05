@@ -2,8 +2,10 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 	"net/http"
-	"time"
+
+	models "service2/models"
 
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
@@ -17,20 +19,34 @@ func Delete_player(client *mongo.Client) http.HandlerFunc {
 		params := mux.Vars(r)
 		PlayerID := params["PlayerID"]
 		id, _ := primitive.ObjectIDFromHex(PlayerID)
-		collection := client.Database("Cricket").Collection("players")
-		ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-		_, err := collection.DeleteOne(ctx, bson.M{"_id": id})
+		collection := client.Database("cricket").Collection("players")
+		fmt.Println("Deleting player with id: ", id)
 
+		// get player by id
+		var player models.Player
+		filter := bson.M{"_id": id}
+		err := collection.FindOne(context.TODO(), filter).Decode(&player)
 		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(`{"message": "` + err.Error() + `"}`))
-			return
-		} else {
 			// player not found
 			w.WriteHeader(http.StatusNotFound)
 			w.Write([]byte(`{"message": "Player not found"}`))
 			return
 		}
+		// // print player
+		fmt.Println("Player: ", player)
+
+		// delete player by id
+		filter = bson.M{"_id": id}
+		_, err = collection.DeleteOne(context.TODO(), filter)
+
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(`{"message": "` + err.Error() + `"}`))
+			return
+		}
+
+		// Deletion successful
+		w.WriteHeader(http.StatusNoContent)
 
 	}
 }
