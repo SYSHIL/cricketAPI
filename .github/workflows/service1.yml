@@ -33,8 +33,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Simulate building and pushing service1 Docker image
-        run: echo "Service1 Docker image build simulation"
+      - name: Build and push service1 Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./service1
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/cricket/service1:${{ steps.get_service1_commit_hash.outputs.commit-hash }}
 
   build_service2:
     name: Build & push Docker image for service2
@@ -46,8 +50,12 @@ jobs:
         id: get_service2_commit_hash
         run: echo "commit-hash=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
-      - name: Simulate building and pushing service2 Docker image
-        run: echo "Service2 Docker image build simulation"
+      - name: Build and push service2 Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./service2
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/cricket/service2:${{ steps.get_service2_commit_hash.outputs.commit-hash }}
 
   build_teams:
     name: Build & push Docker image for teams
@@ -59,8 +67,12 @@ jobs:
         id: get_teams_commit_hash
         run: echo "commit-hash=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
-      - name: Simulate building and pushing teams Docker image
-        run: echo "Teams Docker image build simulation"
+      - name: Build and push teams Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./teams
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/cricket/teams:${{ steps.get_teams_commit_hash.outputs.commit-hash }}
 
   build_gateway:
     name: Build & push Docker image for gateway
@@ -72,5 +84,12 @@ jobs:
         id: get_gateway_commit_hash
         run: echo "commit-hash=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
-      - name: Simulate building and pushing gateway Docker image
-        run: echo "Gateway Docker image build simulation"
+      - name: Check if commit hash matches
+        run: |
+          if [[ "${{ steps.get_gateway_commit_hash.outputs.commit-hash }}" == "$(git rev-parse --short HEAD)" ]]; then
+            echo "Building and pushing gateway Docker image."
+            docker/build-push-action@v2
+          else
+            echo "Commit hash does not match, skipping gateway build."
+          fi
+        if: steps.get_gateway_commit_hash.outputs.commit-hash != ''

@@ -17,6 +17,7 @@ var mongoClientOnce sync.Once
 // Initialize and return the global mongo.Client
 func GetGlobalMongoClient() *mongo.Client {
 	// Use a sync.Once to ensure that initialization only happens once
+
 	mongoClientOnce.Do(func() {
 		serverAPI := options.ServerAPI(options.ServerAPIVersion1)
 		MONGO_URI := os.getenv("MONGO_URI")
