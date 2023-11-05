@@ -6,7 +6,7 @@ on:
       - main
 
 permissions:
-  contents: read, write
+  contents: read|write
 
 jobs:
   build_all:
