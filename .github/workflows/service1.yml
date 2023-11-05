@@ -54,7 +54,7 @@ jobs:
       - name: Simulating building teams Docker image
         run: echo "Simulating building and pushing teams Docker image."
 
-    build_gateway:
+  build_gateway:
     name: Simulate Build & push Docker image for gateway
     needs: build_teams
     runs-on: ubuntu-latest
