@@ -7,8 +7,14 @@ WORKDIR /service1
 # Copy the service1 code into the container
 COPY . .
 
+# Download and install any required dependencies
+RUN go mod download
+
 # Build the Go application
-RUN go build -o service1
+
+RUN CGO_ENABLED=0 GOOS=linux go build -o ./service1
+
+RUN chmod +x ./service1
 
 # Expose port 8081
 EXPOSE 8081

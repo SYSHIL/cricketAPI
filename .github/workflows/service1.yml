@@ -34,7 +34,7 @@ jobs:
       with:
         context: ./service1
         push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/capstone_user:${{steps.get_commit_hash.outputs.commit-hash}}
+        tags: ${{ secrets.DOCKER_USERNAME }}/cricket:${{steps.get_commit_hash.outputs.commit-hash}}
 
       #   run: pwd && sudo add-apt-repository ppa:rmescandon/yq && sudo apt-get install -y yq && yq e -i ".spec[0].template.spec.containers[0].image = \"${{ secrets.DOCKER_USERNAME }}/capstone_user:${{steps.get_commit_hash.outputs.commit-hash}}\"" ./deployment/kube/users.yaml
       # - name: configure git
