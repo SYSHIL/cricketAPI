@@ -50,7 +50,7 @@ jobs:
       - name: Checkout Code for gateway
         uses: actions/checkout@v2
         with:
-          repository: 'github.com/sysil/gateway'
+          repository: 'github.com/syshil/gateway'
           ref: main
           path: gateway
 
