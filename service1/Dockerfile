@@ -12,7 +12,9 @@ RUN go mod download
 
 # Build the Go application
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o ./service1
+# Build the Go application for Linux without disabling CGO
+RUN GOOS=linux go build -o ./service1
+
 
 RUN chmod +x ./service1
 
